@@ -22,7 +22,7 @@ class GetAnggotaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'keyword' => ['nullable', 'string'],
+            'filter' => ['nullable', 'string'],
         ];
     }
 }

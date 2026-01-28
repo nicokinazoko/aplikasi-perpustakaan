@@ -32,6 +32,7 @@ class ApiAnggotaController extends Controller
             return response()->json([
                 'success' => $responseGetAnggota['success'] ?? false,
                 'message' => $responseGetAnggota['message'] ?? 'Ada error ketika ambil data anggota',
+                'data' => [],
             ], $responseGetAnggota['statusCode'] ?? 500);
         }
 

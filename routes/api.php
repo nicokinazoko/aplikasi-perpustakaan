@@ -13,6 +13,6 @@ Route::get('/test', function () {
     return response()->json(['test' => 'true'], 200);
 });
 
-Route::prefix('anggota')->as('anggota')->group(function () {
-    Route::post('', [ApiAnggotaController::class, 'index'])->name('anggota.index');
+Route::prefix('anggota')->group(function () {
+    Route::post('', [ApiAnggotaController::class, 'index'])->name('api.anggota.index');
 });
