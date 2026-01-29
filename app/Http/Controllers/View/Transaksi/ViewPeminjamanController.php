@@ -16,6 +16,7 @@ class ViewPeminjamanController extends Controller
     {
         $anggotaList = AnggotaModel::whereNull('deleted_at')->get();
         $bukuList = BukuModel::whereNull('deleted_at')->get();
+
         return view('transaksi.peminjaman.index', compact(
             'anggotaList',
             'bukuList'

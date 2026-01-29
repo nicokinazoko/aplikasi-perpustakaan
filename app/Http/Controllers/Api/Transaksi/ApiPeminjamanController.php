@@ -6,14 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Transaksi\Peminjaman\CreatePeminjamanRequest;
 use App\Http\Requests\Api\Transaksi\Peminjaman\GetPeminjamanRequest;
 use App\Services\api\transaksi\PeminjamanApiService;
+use App\Services\api\transaksi\PeminjamanDetailApiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ApiPeminjamanController extends Controller
 {
-    protected $peminjamanService;
-    public function __construct(PeminjamanApiService $peminjamanService)
-    {
+    protected $peminjamanService, $peminjamanDetailApiService;
+    public function __construct(
+        PeminjamanApiService $peminjamanService,
+        PeminjamanDetailApiService $peminjamanDetailApiService
+    ) {
         $this->peminjamanService = $peminjamanService;
+        $this->peminjamanDetailApiService = $peminjamanDetailApiService;
     }
 
     /**
@@ -39,6 +45,7 @@ class ApiPeminjamanController extends Controller
             'success' => $responseGetPeminjaman['success'] ?? false,
             'data' => $responseGetPeminjaman['data']
         ], $responseGetPeminjaman['statusCode'] ?? 200);
+
     }
 
     /**
@@ -131,5 +138,15 @@ class ApiPeminjamanController extends Controller
         return response()->json([
             'success' => $responseDeletePeminjaman['success'] ?? false,
         ], $responseDeletePeminjaman['statusCode'] ?? 200);
+    }
+
+    public function populatePeminjamanDetail(string $id)
+    {
+        $dataPeminjaman = $this->peminjamanDetailApiService->populateDataPeminjamanDetailByPeminjamanId($id);
+
+        return response()->json([
+            'success' => true,
+            'data' => $dataPeminjaman
+        ], 200);
     }
 }

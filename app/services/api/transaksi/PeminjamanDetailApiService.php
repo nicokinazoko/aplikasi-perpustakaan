@@ -75,4 +75,16 @@ class PeminjamanDetailApiService
 
         return $dataPeminjamanDetail;
     }
+
+    public function populateDataPeminjamanDetailByPeminjamanId(string $idPeminjaman)
+    {
+        $dataPeminjamanDetail = PeminjamanDetailModel
+            ::whereNull('peminjaman_details.deleted_at')
+            ->where('peminjaman_id', $idPeminjaman)
+            ->leftJoin('peminjamans', 'peminjamans.id', '=', 'peminjaman_details.peminjaman_id')
+            ->leftJoin('bukus', 'bukus.id', 'peminjaman_details.buku_id')
+            ->get();
+
+        return $dataPeminjamanDetail;
+    }
 }

@@ -39,6 +39,7 @@ Route::prefix('peminjaman')->group(function () {
     Route::get('{id}', [ApiPeminjamanController::class, 'show'])->name('api.peminjaman.show');
     Route::patch('{id}', [ApiPeminjamanController::class, 'update'])->name('api.peminjaman.update');
     Route::delete('{id}', [ApiPeminjamanController::class, 'destroy'])->name('api.peminjaman.destroy');
+    Route::get('detail-peminjaman/{id}', [ApiPeminjamanController::class, 'populatePeminjamanDetail'])->name('api.peminjaman.populatePeminjamanDetail');
 });
 
 Route::prefix('pengembalian')->group(function () {

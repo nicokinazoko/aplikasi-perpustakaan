@@ -237,4 +237,14 @@ class PengembalianApiService
         }
     }
 
+    public function findPengembalianByIdPeminjaman(string $idPeminjaman)
+    {
+        $peminjaman = PengembalianModel
+            ::whereNull('deleted_at')
+            ->where('peminjaman_id', $idPeminjaman)
+            ->first();
+
+        return $peminjaman;
+    }
+
 }

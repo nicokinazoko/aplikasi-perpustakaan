@@ -8,7 +8,6 @@
         async function deletePeminjaman(idPeminjaman) {
             const confirmed = confirm('Apakah anda yakin ingin menghapus buku ini?');
 
-            console.log(confirmed);
             if (!confirmed) return;
 
             const route = '{{ route("api.peminjaman.destroy", ":id") }}'.replace(':id', idPeminjaman);
