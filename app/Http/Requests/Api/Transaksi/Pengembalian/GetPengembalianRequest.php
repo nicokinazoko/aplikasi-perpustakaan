@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Api\Transaksi\Peminjaman;
+namespace App\Http\Requests\Api\Transaksi\Pengembalian;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePeminjamanRequest extends FormRequest
+class GetPengembalianRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class UpdatePeminjamanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'filter' => ['nullable', 'string'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'filter.string' => 'silahkan input berupa kata.',
         ];
     }
 }

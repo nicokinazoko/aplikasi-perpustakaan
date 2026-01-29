@@ -66,4 +66,14 @@ class PeminjamanDetailApiService
 
         return $dataPeminjamanDetail;
     }
+
+    public function findPeminjamanDetailByPeminjamanid(string $idPeminjaman)
+    {
+        $dataPeminjamanDetail = PeminjamanDetailModel
+            ::whereNull('deleted_at')
+            ->where('peminjaman_id', $idPeminjaman)
+            ->get;
+
+        return $dataPeminjamanDetail;
+    }
 }

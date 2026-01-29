@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Master\AnggotaController;
 use App\Http\Controllers\Api\Master\ApiAnggotaController;
 use App\Http\Controllers\Api\Master\ApiBukuController;
 use App\Http\Controllers\Api\Transaksi\ApiPeminjamanController;
+use App\Http\Controllers\Api\Transaksi\ApiPengembalianController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,12 @@ Route::prefix('peminjaman')->group(function () {
     Route::get('{id}', [ApiPeminjamanController::class, 'show'])->name('api.peminjaman.show');
     Route::patch('{id}', [ApiPeminjamanController::class, 'update'])->name('api.peminjaman.update');
     Route::delete('{id}', [ApiPeminjamanController::class, 'destroy'])->name('api.peminjaman.destroy');
+});
+
+Route::prefix('pengembalian')->group(function () {
+    Route::post('', [ApiPengembalianController::class, 'index'])->name('api.pengembalian.index');
+    Route::post('store', [ApiPengembalianController::class, 'store'])->name('api.pengembalian.store');
+    Route::get('{id}', [ApiPengembalianController::class, 'show'])->name('api.pengembalian.show');
+    Route::patch('{id}', [ApiPengembalianController::class, 'update'])->name('api.pengembalian.update');
+    Route::delete('{id}', [ApiPengembalianController::class, 'destroy'])->name('api.pengembalian.destroy');
 });
