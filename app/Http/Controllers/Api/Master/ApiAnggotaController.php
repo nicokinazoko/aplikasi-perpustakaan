@@ -119,7 +119,20 @@ class ApiAnggotaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Call service for get request
+        $responseDeleteAnggota = $this->anggotaApiService->deleteAnggota($id);
+
+        if (!$responseDeleteAnggota['success']) {
+            return response()->json([
+                'success' => $responseDeleteAnggota['success'] ?? false,
+                'message' => $responseDeleteAnggota['message'] ?? 'Ada error ketika hapus data buku',
+                'data' => [],
+            ], $responseDeleteAnggota['statusCode'] ?? 500);
+        }
+
+        return response()->json([
+            'success' => $responseDeleteAnggota['success'] ?? false,
+        ], $responseDeleteAnggota['statusCode'] ?? 200);
     }
 
     public function getNomorAnggota()

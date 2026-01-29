@@ -19,6 +19,10 @@ Route::get('/test', function () {
 Route::prefix('anggota')->group(function () {
     Route::post('', [ApiAnggotaController::class, 'index'])->name('api.anggota.index');
     Route::get('get-latest-number', [ApiAnggotaController::class, 'getNomorAnggota'])->name('api.anggota.get-anggota-number');
+    Route::post('store', [ApiAnggotaController::class, 'store'])->name('api.anggota.store');
+    Route::get('{id}', [ApiAnggotaController::class, 'show'])->name('api.anggota.show');
+    Route::patch('{id}', [ApiAnggotaController::class, 'update'])->name('api.anggota.update');
+    Route::delete('{id}', [ApiAnggotaController::class, 'destroy'])->name('api.anggota.destroy');
 });
 
 Route::prefix('buku')->group(function () {

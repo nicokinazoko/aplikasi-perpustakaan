@@ -28,7 +28,7 @@ class CreateAnggotaRequest extends FormRequest
                 'string',
                 Rule::unique('anggotas', 'no_anggota')->whereNull('deleted_at')
             ],
-            'tanggal_lahir' => ['required', 'date', 'date_format:Y/m/d'],
+            'tanggal_lahir' => ['required', 'date', 'date_format:Y-m-d'],
             'nama' => ['required', 'string'],
             'max_pinjam' => ['required', 'integer', 'min:1'],
         ];

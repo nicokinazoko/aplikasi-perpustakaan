@@ -3,6 +3,7 @@
 namespace App\Services\api\master;
 
 use App\Models\AnggotaModel;
+use App\Models\PeminjamanModel;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Throwable;
@@ -127,6 +128,50 @@ class AnggotaApiService
 
     public function deleteAnggota(string $idAnggota)
     {
+        try {
+            // Find anggota
+            $anggota = $this->findAnggotaById($idAnggota);
 
+            // If anggota not found, return validation message
+            if (!$anggota) {
+                return [
+                    'success' => false,
+                    'message' => 'Data anggota tidak ditemukan',
+                    'statusCode' => 404,
+                ];
+            }
+
+            // Check if there is anggota has peminjaman
+            $isPeminjamanExist = PeminjamanModel::where('anggota_id', $idAnggota)->exists();
+
+            if ($isPeminjamanExist) {
+                return [
+                    'success' => false,
+                    'message' => 'Anggota masih meminjam barang',
+                    'statusCode' => 422,
+                ];
+            }
+
+            // Delete anggota
+            $anggota->delete();
+
+            return [
+                'success' => true,
+            ];
+
+        } catch (Throwable $th) {
+            Log::error('Error in deleteAnggota', [
+                'error' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'param' => $idAnggota,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'hapus anggota gagal',
+                'statusCode' => 500,
+            ];
+        }
     }
 }
