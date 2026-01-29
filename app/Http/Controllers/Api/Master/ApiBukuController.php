@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Master;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Master\Buku\CreateBukuRequest;
+use App\Http\Requests\Api\Master\Buku\GetBukuRequest;
 use App\Services\api\master\BukuApiService;
 use Illuminate\Http\Request;
 
@@ -19,8 +21,7 @@ class ApiBukuController extends Controller
      * Display a listing of the resource.
      */
 
-    // TODO: WILL MAKE SEPARATE REQUEST LATER;
-    public function index(Request $request)
+    public function index(GetBukuRequest $request)
     {
         // Get request
         // $validatedRequest = $request->validated();
@@ -46,8 +47,7 @@ class ApiBukuController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // TODO: WILL MAKE THE SEPARATE REQUEST
-    public function store(Request $request)
+    public function store(CreateBukuRequest $request)
     {
         // Get request
         // $validatedRequest = $request->validated();
@@ -95,8 +95,7 @@ class ApiBukuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // TODO: THIS WILL ADD SEPARATE REQUEST
-    public function update(Request $request, string $id)
+    public function update(CreateBukuRequest $request, string $id)
     {
         // Get request
         // $validatedRequest = $request->validated();
