@@ -1,12 +1,12 @@
 @push("js")
     <script>
-        function reloadAnggotaTable() {
-            $('#table-anggota').DataTable().ajax.reload(null, false); // false = stay on current page
+        function reloadBukuTable() {
+            $('#table-buku').DataTable().ajax.reload(null, false); // false = stay on current page
         }
 
-        // For create anggota
-        async function createAnggota(parameter) {
-            const routeStore = '{{ route("api.anggota.store") }}';
+        // For create buku
+        async function createBuku(parameter) {
+            const routeStore = '{{ route("api.buku.store") }}';
 
             try {
                 const response = await $.ajax({
@@ -18,7 +18,7 @@
                 const success = response && response.success === true;
 
                 if (!success) {
-                    const message = (response && response.message) || 'Ada error ketika membuat anggota';
+                    const message = (response && response.message) || 'Ada error ketika membuat buku';
                     alert(message);
                     throw new Error(message);
                 }
@@ -35,13 +35,13 @@
             }
         }
 
-        // For delete anggota
-        async function deleteAnggota(idAnggota) {
-            const confirmed = confirm('Apakah anda yakin ingin menghapus anggota ini?');
+        // For delete buku
+        async function deleteBuku(idBuku) {
+            const confirmed = confirm('Apakah anda yakin ingin menghapus buku ini?');
 
             if (!confirmed) return;
 
-            const route = '{{ route("api.anggota.destroy", ":id") }}'.replace(':id', idAnggota);
+            const route = '{{ route("api.buku.destroy", ":id") }}'.replace(':id', idBuku);
 
             try {
                 const response = await $.ajax({
@@ -52,16 +52,16 @@
                 const success = response && response.success === true;
 
                 if (!success) {
-                    const message = (response && response.message) || 'Ada error ketika hapus anggota';
+                    const message = (response && response.message) || 'Ada error ketika hapus buku';
                     alert(message);
                     throw new Error(message);
                 }
 
-                const message = (response && response.message) || 'Hapus anggota berhasil';
+                const message = (response && response.message) || 'Hapus buku berhasil';
                 alert(message);
 
                 // Reload table
-                reloadAnggotaTable();
+                reloadBukuTable();
 
                 return (response && response.data) || {};
 
@@ -76,12 +76,12 @@
         }
 
         $(document).ready(function() {
-            // Init tabel anggota
-            $('#table-anggota').DataTable({
+            // Init tabel buku
+            $('#table-buku').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route("api.anggota.index") }}',
+                    url: '{{ route("api.buku.index") }}',
                     type: 'POST',
                     data: function(data) {
                         return {
@@ -90,21 +90,24 @@
                     }
                 },
                 columns: [{
-                        data: 'no_anggota'
+                        data: 'judul_buku'
                     },
                     {
-                        data: 'nama'
+                        data: 'penerbit'
                     },
                     {
-                        data: 'max_pinjam'
+                        data: 'dimensi'
                     },
                     {
-                        data: null, // we don’t need a field from backend
+                        data: 'stok'
+                    },
+                    {
+                        data: null,
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
                             return `
-                            <button class="btn btn-sm btn-danger" onclick="deleteAnggota('${row.id}')">Hapus</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBuku('${row.id}')">Hapus</button>
                         `;
                         }
                     }
@@ -112,33 +115,33 @@
             });
 
             // Modal show event
-            $('#tambahAnggotaModal').on('shown.bs.modal', function() {
-                $('#form-tambah-anggota')[0].reset();
-                $('#no_anggota').focus();
+            $('#tambahBukuModal').on('shown.bs.modal', function() {
+                $('#form-tambah-buku')[0].reset();
+                $('#judul_buku').focus();
             });
 
-            // Button simpan anggota
-            $('#button-simpan').on('click', async function() {
+            // Button simpan buku
+            $('#button-simpan-buku').on('click', async function() {
                 const parameter = {
-                    no_anggota: $('#no_anggota').val(),
-                    tanggal_lahir: $('#tanggal_lahir').val(),
-                    nama: $('#nama').val(),
-                    max_pinjam: $('#max_pinjam').val(),
+                    judul_buku: $('#judul_buku').val(),
+                    penerbit: $('#penerbit').val(),
+                    dimensi: $('#dimensi').val(),
+                    stok: $('#stok').val(),
                 };
 
                 try {
-                    await createAnggota(parameter);
+                    await createBuku(parameter);
 
-                    alert('Anggota berhasil dibuat!');
+                    alert('Buku berhasil dibuat!');
 
                     // Reload table
-                    reloadAnggotaTable();
+                    reloadBukuTable();
 
                     // Close modal
-                    $('#tambahAnggotaModal').modal('hide');
+                    $('#tambahBukuModal').modal('hide');
 
                 } catch (error) {
-                    console.error('Error creating anggota:', error);
+                    console.error('Error creating buku:', error);
                 }
             });
         });

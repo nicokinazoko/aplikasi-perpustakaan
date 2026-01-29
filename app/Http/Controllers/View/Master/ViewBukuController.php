@@ -12,7 +12,7 @@ class ViewBukuController extends Controller
      */
     public function index()
     {
-        return view('master.anggota.index');
+        return view('master.buku.index');
     }
 
     /**
