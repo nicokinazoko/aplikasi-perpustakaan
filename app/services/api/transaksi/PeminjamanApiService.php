@@ -4,6 +4,7 @@ namespace App\Services\api\transaksi;
 
 use App\Models\AnggotaModel;
 use App\Models\BukuModel;
+use App\Models\PeminjamanDetailModel;
 use App\Models\PeminjamanModel;
 use App\Services\api\master\AnggotaApiService;
 use App\Services\api\master\BukuApiService;
@@ -32,11 +33,25 @@ class PeminjamanApiService
         $keyword = $filter['filter'] ?? '';
 
         // Find data peminjaman
-        $queryPeminjaman = PeminjamanModel
-            ::leftJoin('peminjaman_details', 'peminjaman_details.peminjaman_id', '=', 'peminjamans.id')
+        $queryPeminjaman = PeminjamanModel::select(
+            'peminjamans.id',
+            'peminjamans.anggota_id',
+            'peminjamans.tanggal_pinjam',
+            'anggotas.nama as nama_anggota',
+            'anggotas.no_anggota as no_anggota',
+            DB::raw('SUM(peminjaman_details.total_pinjam) as total_buku')
+        )
+            ->leftJoin('peminjaman_details', 'peminjaman_details.peminjaman_id', '=', 'peminjamans.id')
             ->leftJoin('anggotas', 'anggotas.id', '=', 'peminjamans.anggota_id')
-            ->leftJoin('bukus', 'bukus.id', '=', 'peminjaman_details.buku_id')
-            ->whereNull('peminjamans.deleted_at');
+            ->whereNull('peminjamans.deleted_at')
+            ->groupBy(
+                'peminjamans.id',
+                'peminjamans.anggota_id',
+                'peminjamans.tanggal_pinjam',
+                'anggotas.nama',
+                'anggotas.no_anggota'
+            );
+
 
         if ($keyword) {
             $queryPeminjaman->where(function ($query) use ($keyword) {
@@ -111,11 +126,14 @@ class PeminjamanApiService
                 return $carry + ($item['total_pinjam'] ?? 0);
             }, 0);
 
+            // Get max pinjam from anggota
+            $maximumPinjam = $anggota['max_pinjam'] ?? 0;
+
             // Check if total peminjaman not past the max pinjam in anggota
-            if ($totalPeminjaman > $anggota['max_pinjam']) {
+            if ($totalPeminjaman > $maximumPinjam) {
                 return [
                     'success' => false,
-                    'message' => 'jumlah peminjaman melebihi batas',
+                    'message' => "Hanya bisa maksimal pinjam $maximumPinjam",
                     'statusCode' => 422,
                 ];
             }
@@ -208,9 +226,10 @@ class PeminjamanApiService
 
             // Start transaction
             DB::transaction(function () use ($peminjaman, $inputPeminjaman, $newDetail, $anggota) {
-
+                // Get data peminjaman detail
+                $listPeminjamanDetail = $this->peminjamanDetailApiService->findPeminjamanDetailByPeminjamanid($peminjaman->id);
                 // 1. Restore old stock
-                foreach ($peminjaman->details as $oldItem) {
+                foreach ($listPeminjamanDetail as $oldItem) {
                     $buku = BukuModel::find($oldItem->buku_id);
                     if ($buku)
                         $buku->increment('stok', $oldItem->total_pinjam);
@@ -287,8 +306,11 @@ class PeminjamanApiService
             }
 
             DB::transaction(function () use ($peminjaman) {
+                // Get data peminjaman detail
+                $listPeminjamanDetail = $this->peminjamanDetailApiService->findPeminjamanDetailByPeminjamanid($peminjaman->id);
+
                 // 1. Restore buku stock
-                foreach ($peminjaman->details as $item) {
+                foreach ($listPeminjamanDetail as $item) {
                     $buku = BukuModel::find($item->buku_id);
                     if ($buku) {
                         $buku->increment('stok', $item->total_pinjam);
@@ -297,8 +319,14 @@ class PeminjamanApiService
 
                 // 2. Restore anggota max_pinjam
                 $anggota = AnggotaModel::find($peminjaman->anggota_id);
+
                 if ($anggota) {
-                    $totalPinjam = $peminjaman->details->sum('total_pinjam');
+                    // Get total pinjam from peminjaman detail
+                    $totalPinjam = PeminjamanDetailModel
+                        ::whereNull('deleted_at')
+                        ->where('peminjaman_id', $peminjaman->id)
+                        ->sum('total_pinjam');
+
                     $anggota->increment('max_pinjam', $totalPinjam);
                 }
 

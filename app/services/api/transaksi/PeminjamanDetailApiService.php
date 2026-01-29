@@ -56,15 +56,14 @@ class PeminjamanDetailApiService
 
     public function createPeminjamanDetail(string $idPeminjaman, array $inputPeminjamanDetail)
     {
-        // Merge id peminjaman into detail data
-        $inputPeminjamanDetailMerged = array_merge($inputPeminjamanDetail, [
-            'id_peminjaman' => $idPeminjaman,
-        ]);
+        $data = [];
 
-        // Craete data peminjaman detail
-        $dataPeminjamanDetail = PeminjamanDetailModel::create($inputPeminjamanDetailMerged);
+        foreach ($inputPeminjamanDetail as $detail) {
+            $detail['peminjaman_id'] = $idPeminjaman;
+            $data[] = PeminjamanDetailModel::create($detail);
+        }
 
-        return $dataPeminjamanDetail;
+        return $data;
     }
 
     public function findPeminjamanDetailByPeminjamanid(string $idPeminjaman)
@@ -72,7 +71,7 @@ class PeminjamanDetailApiService
         $dataPeminjamanDetail = PeminjamanDetailModel
             ::whereNull('deleted_at')
             ->where('peminjaman_id', $idPeminjaman)
-            ->get;
+            ->get();
 
         return $dataPeminjamanDetail;
     }

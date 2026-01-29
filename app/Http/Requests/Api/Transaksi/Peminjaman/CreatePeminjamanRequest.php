@@ -22,7 +22,7 @@ class CreatePeminjamanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tanggal_pinjam' => ['required', 'date_format:Y/m/d'],
+            'tanggal_pinjam' => ['required', 'date_format:Y-m-d'],
             'anggota_id' => ['required', 'uuid'],
 
             // Detail peminjaman validation
@@ -36,7 +36,7 @@ class CreatePeminjamanRequest extends FormRequest
     {
         return [
             'tanggal_pinjam.required' => 'Tanggal pinjam wajib diisi.',
-            'tanggal_pinjam.date_format' => 'Tanggal pinjam harus sesuai format Y/m/d.',
+            'tanggal_pinjam.date_format' => 'Tanggal pinjam harus sesuai format Y-m-d.',
             'anggota_id.required' => 'ID anggota wajib diisi.',
             'anggota_id.uuid' => 'ID anggota harus format UUID.',
 

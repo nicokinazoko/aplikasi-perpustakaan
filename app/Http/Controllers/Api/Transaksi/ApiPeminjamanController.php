@@ -62,7 +62,6 @@ class ApiPeminjamanController extends Controller
 
         return response()->json([
             'success' => $responseCreatePeminjaman['success'] ?? false,
-            'data' => $responseCreatePeminjaman['data']
         ], $responseCreatePeminjaman['statusCode'] ?? 200);
     }
 
