@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Api\Master\Anggota;
+namespace App\Http\Requests\Api\Transaksi\Peminjaman;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetAnggotaRequest extends FormRequest
+class UpdatePeminjamanRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,15 +22,7 @@ class GetAnggotaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'filter' => ['nullable', 'string'],
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            // Kontrak
-            'filter.string' => 'silahkan input berupa kata.',
+            //
         ];
     }
 }

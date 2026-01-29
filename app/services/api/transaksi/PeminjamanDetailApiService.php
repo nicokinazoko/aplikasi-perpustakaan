@@ -53,4 +53,17 @@ class PeminjamanDetailApiService
             'statusCode' => 200,
         ];
     }
+
+    public function createPeminjamanDetail(string $idPeminjaman, array $inputPeminjamanDetail)
+    {
+        // Merge id peminjaman into detail data
+        $inputPeminjamanDetailMerged = array_merge($inputPeminjamanDetail, [
+            'id_peminjaman' => $idPeminjaman,
+        ]);
+
+        // Craete data peminjaman detail
+        $dataPeminjamanDetail = PeminjamanDetailModel::create($inputPeminjamanDetailMerged);
+
+        return $dataPeminjamanDetail;
+    }
 }

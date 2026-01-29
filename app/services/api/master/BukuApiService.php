@@ -152,4 +152,25 @@ class BukuApiService
             ];
         }
     }
+
+    public function checkStock(int $bukuId, int $jumlah)
+    {
+        $buku = BukuModel::find($bukuId);
+
+        if (!$buku) {
+            return [
+                'success' => false,
+                'message' => "Buku ID {$bukuId} tidak ditemukan",
+            ];
+        }
+
+        if ($jumlah > $buku->stock) {
+            return [
+                'success' => false,
+                'message' => "Stok buku '{$buku->judul}' tidak mencukupi (tersisa: {$buku->stock})",
+            ];
+        }
+
+        return ['success' => true, 'buku' => $buku];
+    }
 }
