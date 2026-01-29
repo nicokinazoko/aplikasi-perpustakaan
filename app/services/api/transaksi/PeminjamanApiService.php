@@ -15,18 +15,16 @@ use Throwable;
 
 class PeminjamanApiService
 {
-    protected $anggotaApiService, $peminjamanDetailApiService, $bukuApiService, $pengembalianApiService;
+    protected $anggotaApiService, $peminjamanDetailApiService, $bukuApiService;
 
     public function __construct(
         AnggotaApiService $anggotaApiService,
         PeminjamanDetailApiService $peminjamanDetailApiService,
         BukuApiService $bukuApiService,
-        PengembalianApiService $pengembalianApiService
     ) {
         $this->anggotaApiService = $anggotaApiService;
         $this->peminjamanDetailApiService = $peminjamanDetailApiService;
         $this->bukuApiService = $bukuApiService;
-        $this->pengembalianApiService = $pengembalianApiService;
     }
 
     public function getPeminjaman(array $filter)
@@ -307,17 +305,6 @@ class PeminjamanApiService
                 ];
             }
 
-            // Find data pengembalian
-            $pengembalian = $this->pengembalianApiService->findPengembalianByIdPeminjaman($idPeminjaman);
-
-
-            if (!$pengembalian) {
-                return [
-                    'success' => false,
-                    'message' => 'data pengembalian sudah ada, silahkan hapus data pengembalian terlebih dahulu',
-                    'statusCode' => 404,
-                ];
-            }
             DB::transaction(function () use ($peminjaman) {
                 // Get data peminjaman detail
                 $listPeminjamanDetail = $this->peminjamanDetailApiService->findPeminjamanDetailByPeminjamanid($peminjaman->id);

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Master\AnggotaController;
 use App\Http\Controllers\Api\Master\ApiAnggotaController;
 use App\Http\Controllers\Api\Master\ApiBukuController;
 use App\Http\Controllers\Api\Transaksi\ApiPeminjamanController;
+use App\Http\Controllers\Api\Transaksi\ApiPeminjamanDetailController;
 use App\Http\Controllers\Api\Transaksi\ApiPengembalianController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,3 +50,8 @@ Route::prefix('pengembalian')->group(function () {
     Route::patch('{id}', [ApiPengembalianController::class, 'update'])->name('api.pengembalian.update');
     Route::delete('{id}', [ApiPengembalianController::class, 'destroy'])->name('api.pengembalian.destroy');
 });
+
+Route::prefix('peminjaman-detail')->group(function () {
+    Route::get('detail-peminjaman/{id}', [ApiPeminjamanDetailController::class, 'populatePeminjamanDetail'])->name('api.peminjaman-detail.populatePeminjamanDetail');
+});
+

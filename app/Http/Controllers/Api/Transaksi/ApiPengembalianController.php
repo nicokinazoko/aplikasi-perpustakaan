@@ -23,7 +23,7 @@ class ApiPengembalianController extends Controller
     public function index(GetPengembalianRequest $request)
     {
         // Get request
-        $validatedRequest = $request->validated();
+        $validatedRequest = $request->all();
 
         // Call service for get request
         $responseGetPengembalian = $this->pengembalianApiService->getPengembalian($validatedRequest);
@@ -63,7 +63,7 @@ class ApiPengembalianController extends Controller
 
         return response()->json([
             'success' => $responseCreatePengembalian['success'] ?? false,
-            'data' => $responseCreatePengembalian['data']
+            'data' => $responseCreatePengembalian['data'] ?? []
         ], $responseCreatePengembalian['statusCode'] ?? 200);
     }
 

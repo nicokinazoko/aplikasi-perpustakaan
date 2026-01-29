@@ -38,7 +38,7 @@
                             <label for="peminjaman_id">Pilih Peminjaman</label>
                             <select class="form-control" id="peminjaman_id" name="peminjaman_id" required>
                                 <option value="">-- Pilih Peminjaman --</option>
-                                @foreach ($pengembalians as $p)
+                                @foreach ($pinjamans as $p)
                                     <option value="{{ $p->id }}">{{ $p->nama_anggota }} ({{ $p->no_anggota }}) | Tgl
                                         Pinjam: {{ $p->tanggal_pinjam }}</option>
                                 @endforeach

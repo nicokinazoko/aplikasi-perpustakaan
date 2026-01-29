@@ -28,12 +28,24 @@ class PengembalianApiService
         $keyword = $filter['filter'] ?? '';
 
         // Find data peminjaman
-        $queryPengembalian = PengembalianModel
-            ::leftJoin('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')
+        $queryPengembalian = PengembalianModel::select(
+            'pengembalians.id',
+            'peminjamans.tanggal_pinjam',
+            'anggotas.nama as nama',
+            'anggotas.no_anggota',
+            DB::raw('SUM(peminjaman_details.total_pinjam) as total_pinjam')
+        )
+            ->leftJoin('peminjamans', 'peminjamans.id', '=', 'pengembalians.peminjaman_id')
             ->leftJoin('peminjaman_details', 'peminjaman_details.peminjaman_id', '=', 'peminjamans.id')
             ->leftJoin('anggotas', 'anggotas.id', '=', 'peminjamans.anggota_id')
-            ->leftJoin('bukus', 'bukus.id', '=', 'peminjaman_details.buku_id')
-            ->whereNull('pengembalians.deleted_at');
+            ->whereNull('pengembalians.deleted_at')
+            ->groupBy(
+                'pengembalians.id',
+                'peminjamans.tanggal_pinjam',
+                'anggotas.nama',
+                'anggotas.no_anggota'
+            );
+
 
         if ($keyword) {
             $queryPengembalian->where(function ($query) use ($keyword) {

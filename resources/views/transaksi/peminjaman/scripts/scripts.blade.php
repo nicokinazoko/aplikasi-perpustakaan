@@ -46,7 +46,6 @@
 
         $(document).ready(function() {
             let detailIndex = 1;
-
             // Initialize DataTable
             const table = $('#table-peminjaman').DataTable({
                 processing: true,
@@ -54,8 +53,10 @@
                 ajax: {
                     url: '{{ route("api.peminjaman.index") }}',
                     type: 'POST',
-                    data: function(d) {
-                        d._token = '{{ csrf_token() }}';
+                    data: function(data) {
+                        return {
+                            filter: data?.search?.value
+                        };
                     }
                 },
                 columns: [{

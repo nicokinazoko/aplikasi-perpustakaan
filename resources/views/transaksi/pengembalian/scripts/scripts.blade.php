@@ -116,7 +116,7 @@
 
                 try {
                     const response = await $.ajax({
-                        url: `{{ url("api/peminjaman/detail-peminjaman") }}/${peminjamanId}`,
+                        url: `{{ url("api/peminjaman-detail/detail-peminjaman") }}/${peminjamanId}`,
                         type: 'GET'
                     });
 
